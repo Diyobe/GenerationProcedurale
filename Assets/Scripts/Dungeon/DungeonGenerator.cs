@@ -31,20 +31,20 @@ public class DungeonGenerator : MonoBehaviour
     {
         int size = Random.Range(mainSizeMin, mainSizeMax);
 
-        bool flag = false;
+        bool fail = false;
 
         int counter = 0;
 
-        for(int i = 0; i < size; i++)
+        for (int i = 0; i < size; i++)
         {
             Node node = new Node();
 
-            if(i == 0)
+            if (i == 0)
             {
                 node.Type = RoomType.Start;
                 node.Position = currentPosition;
             }
-            else if(i == size - 1)
+            else if (i == size - 1)
             {
                 node.Type = RoomType.End;
                 node.Position = ChooseRandomDirection();
@@ -72,7 +72,7 @@ public class DungeonGenerator : MonoBehaviour
 
                     node.connections.Add(new Connection(dungeon[i], dungeon[i - 1]));
 
-                    Debug.Log("CREATION D'UNE SALLE EN POSITION : " + node.Position.x + ", " + node.Position.y 
+                    Debug.Log("CREATION D'UNE SALLE EN POSITION : " + node.Position.x + ", " + node.Position.y
                                 + " CONNECTEE A : " + node.connections[0].Nodes[0].Position.x + ", " + node.connections[0].Nodes[0].Position.y);
                     Debug.Log("TYPE : " + node.Type);
                 }
@@ -84,16 +84,20 @@ public class DungeonGenerator : MonoBehaviour
             }
 
             counter++;
-            if (counter > 1000 && !flag)
+            if (counter > 1000 && !fail)
+            {
+                fail = true;
                 break;
-
-            DrawDungeon();
+            }
         }
 
-
-        if(!flag)
+        if(fail)
         {
             Debug.LogWarning("ECHEC DE LA GENERATION");
+        }
+        else 
+        {
+            DrawDungeon();
         }
     }
 

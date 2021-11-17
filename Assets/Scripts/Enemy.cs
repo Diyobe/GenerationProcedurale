@@ -65,8 +65,8 @@ public class Enemy : MonoBehaviour
     [Header("Attack")]
     public GameObject attackPrefab = null;
     public GameObject attackSpawnPoint = null;
-	public float attackWarmUp = 0.5f;
-	public float attackDistance = 0.5f;
+    public float attackWarmUp = 0.5f;
+    public float attackDistance = 0.5f;
     public float attackCooldown = 1.0f;
     public ORIENTATION orientation = ORIENTATION.FREE;
 
@@ -74,38 +74,38 @@ public class Enemy : MonoBehaviour
 
     // State attributes
     private STATE _state = STATE.IDLE;
-	private float _stateTimer = 0.0f;
+    private float _stateTimer = 0.0f;
 
-	// Dungeon location
-	private Room _room = null;
+    // Dungeon location
+    private Room _room = null;
 
-	public static List<Enemy> allEnemies = new List<Enemy>();
+    public static List<Enemy> allEnemies = new List<Enemy>();
 
     // Use this for initialization
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
         GetComponentsInChildren<SpriteRenderer>(true, _spriteRenderers);
-		allEnemies.Add(this);
+        allEnemies.Add(this);
 
-	}
+    }
 
-	private void OnDestroy()
-	{
-		allEnemies.Remove(this);
-	}
-
-	private void Start()
+    private void OnDestroy()
     {
-		foreach(Room room in Room.allRooms)
-		{
-			if(room.Contains(transform.position))
-			{
-				_room = room;
-			}
-		}
+        allEnemies.Remove(this);
+    }
 
-		SetState(STATE.IDLE);
+    private void Start()
+    {
+        foreach (Room room in Room.allRooms)
+        {
+            if (room.Contains(transform.position))
+            {
+                _room = room;
+            }
+        }
+
+        SetState(STATE.IDLE);
     }
 
     // Update is called once per frame
@@ -127,10 +127,14 @@ public class Enemy : MonoBehaviour
         if (CanMove() && Player.Instance.Room == _room)
         {
             Vector2 enemyToPlayer = (Player.Instance.transform.position - transform.position);
-            if(enemyToPlayer.magnitude < attackDistance)
+
+            transform.eulerAngles = new Vector3(0.0f, 0.0f, ComputeOrientationAngle(enemyToPlayer.normalized));
+
+            if (enemyToPlayer.magnitude < attackDistance)
             {
                 Attack();
-            } else
+            }
+            else
             {
                 _direction = enemyToPlayer.normalized;
             }
@@ -144,17 +148,17 @@ public class Enemy : MonoBehaviour
     // Update states
     private void UpdateState()
     {
-		_stateTimer += Time.deltaTime;
+        _stateTimer += Time.deltaTime;
 
-		switch (_state)
+        switch (_state)
         {
             case STATE.ATTACKING:
-				if(_stateTimer >= attackWarmUp)
-				{
-					SpawnAttackPrefab();
-					SetState(STATE.IDLE);
-				}
-				break;
+                if (_stateTimer >= attackWarmUp)
+                {
+                    SpawnAttackPrefab();
+                    SetState(STATE.IDLE);
+                }
+                break;
             default: break;
         }
     }
@@ -168,9 +172,9 @@ public class Enemy : MonoBehaviour
         //}
 
         _state = state;
-		_stateTimer = 0.0f;
-		// Enter new state
-		switch (_state)
+        _stateTimer = 0.0f;
+        // Enter new state
+        switch (_state)
         {
             case STATE.STUNNED: _currentMovement = stunnedMovement; break;
             case STATE.DEAD: EndBlink(); Destroy(gameObject); break;
@@ -193,9 +197,10 @@ public class Enemy : MonoBehaviour
             // If direction magnitude > 0, Accelerate in direction, then clamp velocity to max speed. Do not apply friction if character is moving toward a direction.
             _body.velocity += _direction * _currentMovement.acceleration * Time.fixedDeltaTime;
             _body.velocity = Vector2.ClampMagnitude(_body.velocity, _currentMovement.speedMax);
-            transform.eulerAngles = new Vector3(0.0f, 0.0f, ComputeOrientationAngle(_direction));
+            //transform.eulerAngles = new Vector3(0.0f, 0.0f, ComputeOrientationAngle(_direction));
         }
-        else {
+        else
+        {
             // If direction magnitude == 0, Apply friction
             float frictionMagnitude = _currentMovement.friction * Time.fixedDeltaTime;
             if (_body.velocity.magnitude > frictionMagnitude)

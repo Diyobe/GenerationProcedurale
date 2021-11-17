@@ -58,8 +58,8 @@ public class DungeonGenerator : MonoBehaviour
 
             if (i > 0 && node.Position == Vector2.zero)
             {
-                Debug.Log("DESTRUCTION DU DUNGON, ON RECOMMENCE !!!!\n");
-                i = 0;
+                Debug.LogWarning("DESTRUCTION DU DONGEON, ON RECOMMENCE !!!!\n");
+                i = -1;
                 dungeon.Clear();
             }
             else
@@ -86,6 +86,7 @@ public class DungeonGenerator : MonoBehaviour
             counter++;
             if (counter > 1000 && !fail)
             {
+                Debug.LogWarning("ON EN A GROS ! JE STOP L'ALGO");
                 fail = true;
                 break;
             }
@@ -93,7 +94,7 @@ public class DungeonGenerator : MonoBehaviour
 
         if(fail)
         {
-            Debug.LogWarning("ECHEC DE LA GENERATION");
+            Debug.LogError("ECHEC DE LA GENERATION");
         }
         else 
         {

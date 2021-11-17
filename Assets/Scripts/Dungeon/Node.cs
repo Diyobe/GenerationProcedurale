@@ -14,7 +14,7 @@ public enum Difficulty
     Hard,
 }
 
-public class Node : MonoBehaviour
+public class Node
 {
     Vector2 position;
     public Vector2 Position

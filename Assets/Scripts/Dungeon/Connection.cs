@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Connection : MonoBehaviour
+public class Connection
 {
     Node[] nodes = new Node[2];
     public Node[] Nodes

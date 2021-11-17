@@ -17,6 +17,11 @@ public class DungeonGenerator : MonoBehaviour
     private int secondarySize;
 
 
+    private void Start()
+    {
+        GenerateDungeon();
+    }
+
     private void GenerateDungeon()
     {
         int size = Random.Range(mainSizeMin, mainSizeMax);
@@ -33,17 +38,43 @@ public class DungeonGenerator : MonoBehaviour
             {
                 node.Type = RoomType.Start;
                 node.Position = currentPosition;
-
             }
             else if(i == size - 1)
             {
                 node.Type = RoomType.End;
+                node.Position = ChooseRandomDirection();
             }
             else
             {
                 node.Type = RoomType.Other;
+                node.Position = ChooseRandomDirection();
+
             }
 
+            if (node.Position.Equals(new Position(-1, -1)))
+            {
+                Debug.Log("DESTRUCTION DU DUNGON, ON RECOMMENCE !!!!\n");
+                i = 0;
+                dungeon.Clear();
+            }
+            else
+            {
+                dungeon.Add(node);
+
+                if (node.Type != RoomType.Start)
+                {
+                    node.connections.Add(new Connection(dungeon[i - 1], dungeon[i]));
+
+                    Debug.Log("CREATION D'UNE SALLE EN POSITION : " + node.Position.x + ", " + node.Position.y 
+                                + " CONNECTEE A : " + node.connections[0].Nodes[0].Position.x + ", " + node.connections[0].Nodes[0].Position.y);
+                    Debug.Log("TYPE : " + node.Type);
+                }
+                else
+                {
+                    Debug.Log("CREATION D'UNE SALLE EN POSITION : " + node.Position.x + ", " + node.Position.y);
+                    Debug.Log("TYPE : " + node.Type);
+                }
+            }
 
 
 
@@ -61,11 +92,16 @@ public class DungeonGenerator : MonoBehaviour
 
     private bool CheckPosition(Position pos)
     {
+        foreach(Node node in dungeon)
+        {
+            if (node.Position.Equals(pos))
+                return false;
+        }
 
         return true;
     }
 
-    private Connection ChooseRandomConnection()
+    private Position ChooseRandomDirection()
     {
         List<int> list = new List<int> { 1, 2, 3, 4 };
         int i = 0;
@@ -76,11 +112,7 @@ public class DungeonGenerator : MonoBehaviour
 
             Direction dir = (Direction)list[randomInt];
 
-            Connection connection = new Connection();
-
             Position position;
-
-            Node node = new Node();
 
             if (dir == Direction.Left)
             {
@@ -106,7 +138,8 @@ public class DungeonGenerator : MonoBehaviour
 
             if (CheckPosition(position))
             {
-                return connection;
+                currentPosition = position;
+                return position;
             }
             else
             {
@@ -116,7 +149,6 @@ public class DungeonGenerator : MonoBehaviour
             i++;
         }
 
-        return null;
+        return new Position(-1, -1);
     }
-
 }

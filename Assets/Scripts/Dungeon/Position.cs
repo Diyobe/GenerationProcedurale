@@ -18,4 +18,11 @@ public class Position : MonoBehaviour
         x = pos.x;
         y = pos.y;
     }
+
+    public bool Equals(Position pos)
+    {
+        if (x == pos.x && y == pos.y)
+            return true;
+        return false;
+    }
 }

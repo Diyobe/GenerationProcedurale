@@ -10,8 +10,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : MonoBehaviour
 {
+    public delegate void OnEnemyDead(Enemy enemy);
+    public static OnEnemyDead onEnemyDead;
 
-    [System.Serializable]
+        [System.Serializable]
     public class MovementParameters
     {
         public float speedMax = 1.0f;
@@ -106,6 +108,12 @@ public class Enemy : MonoBehaviour
         }
 
         SetState(STATE.IDLE);
+        onEnemyDead += OnDeath;
+    }
+
+    void OnDeath(Enemy enemy)
+    {
+
     }
 
     // Update is called once per frame
@@ -177,7 +185,7 @@ public class Enemy : MonoBehaviour
         switch (_state)
         {
             case STATE.STUNNED: _currentMovement = stunnedMovement; break;
-            case STATE.DEAD: EndBlink(); Destroy(gameObject); break;
+            case STATE.DEAD: EndBlink(); onEnemyDead(this); Destroy(gameObject); break;
             default: _currentMovement = defaultMovement; break;
         }
 

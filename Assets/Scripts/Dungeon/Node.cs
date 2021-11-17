@@ -37,5 +37,5 @@ public class Node : MonoBehaviour
         set { difficulty = value; }
     }
 
-
+    public List<Connection> connections = new List<Connection>();
 }

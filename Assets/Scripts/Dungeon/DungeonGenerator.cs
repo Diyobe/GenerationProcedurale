@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class DungeonGenerator : MonoBehaviour
 {
+    public GameObject roomTest;
+
     public enum Direction { Left = 1, Right = 2, Up = 3, Down = 4}
 
     List<Node> dungeon = new List<Node>();
 
-    Position currentPosition = new Position(50, 50);
+    Vector2 currentPosition = new Vector2(0, 0);
 
     [SerializeField]
     private int mainSizeMin, mainSizeMax;
+
+    [SerializeField]
+    private float roomDimensionX = 50, roomDimensionY = 50;
 
     [SerializeField]
     private int secondarySize;
@@ -51,7 +56,7 @@ public class DungeonGenerator : MonoBehaviour
 
             }
 
-            if (node.Position.Equals(new Position(-1, -1)))
+            if (i > 0 && node.Position == Vector2.zero)
             {
                 Debug.Log("DESTRUCTION DU DUNGON, ON RECOMMENCE !!!!\n");
                 i = 0;
@@ -63,7 +68,9 @@ public class DungeonGenerator : MonoBehaviour
 
                 if (node.Type != RoomType.Start)
                 {
-                    node.connections.Add(new Connection(dungeon[i - 1], dungeon[i]));
+                    dungeon[i - 1].connections.Add(new Connection(dungeon[i - 1], dungeon[i]));
+
+                    node.connections.Add(new Connection(dungeon[i], dungeon[i - 1]));
 
                     Debug.Log("CREATION D'UNE SALLE EN POSITION : " + node.Position.x + ", " + node.Position.y 
                                 + " CONNECTEE A : " + node.connections[0].Nodes[0].Position.x + ", " + node.connections[0].Nodes[0].Position.y);
@@ -76,11 +83,11 @@ public class DungeonGenerator : MonoBehaviour
                 }
             }
 
-
-
             counter++;
             if (counter > 1000 && !flag)
                 break;
+
+            DrawDungeon();
         }
 
 
@@ -90,18 +97,18 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    private bool CheckPosition(Position pos)
+    private bool CheckPosition(Vector2 pos)
     {
         foreach(Node node in dungeon)
         {
-            if (node.Position.Equals(pos))
+            if (node.Position == pos)
                 return false;
         }
 
         return true;
     }
 
-    private Position ChooseRandomDirection()
+    private Vector2 ChooseRandomDirection()
     {
         List<int> list = new List<int> { 1, 2, 3, 4 };
         int i = 0;
@@ -112,27 +119,23 @@ public class DungeonGenerator : MonoBehaviour
 
             Direction dir = (Direction)list[randomInt];
 
-            Position position;
+            Vector2 position = currentPosition; ;
 
             if (dir == Direction.Left)
             {
-                position = new Position(currentPosition);
-                position.x -= 1;
+                position.x -= roomDimensionX;
             }
             else if (dir == Direction.Right)
             {
-                position = new Position(currentPosition);
-                position.x += 1;
+                position.x += roomDimensionX;
             }
             else if (dir == Direction.Up)
             {
-                position = new Position(currentPosition);
-                position.y += 1;
+                position.y += roomDimensionY;
             }
             else
             {
-                position = new Position(currentPosition);
-                position.y -= 1;
+                position.y -= roomDimensionY;
             }
 
 
@@ -149,6 +152,40 @@ public class DungeonGenerator : MonoBehaviour
             i++;
         }
 
-        return new Position(-1, -1);
+        return Vector2.zero;
+    }
+
+
+    public void DrawDungeon()
+    {
+        foreach(Node node in dungeon)
+        {
+            // Room 
+
+            GameObject go = Instantiate(roomTest, transform);
+            go.transform.position = new Vector2(node.Position.x, node.Position.y);
+
+            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+
+            if (node.Type == RoomType.Start)
+                sr.color = Color.green;
+            else if (node.Type == RoomType.Other)
+                sr.color = Color.grey;
+            else
+                sr.color = Color.red;
+
+            // Connections
+
+            LineRenderer line = go.AddComponent<LineRenderer>();
+            line.startWidth = 0.05f;
+            line.endWidth = 0.05f;
+
+            for (int i = 0; i < node.connections.Count; i++)
+            {
+                line.SetPosition(0, node.connections[i].Nodes[0].Position);
+                line.SetPosition(1, node.connections[i].Nodes[1].Position);
+            }
+
+        }
     }
 }

@@ -143,12 +143,12 @@ MonoBehaviour:
         _stringValue: 
         _objectValue: {fileID: 0}
     prefabData:
-      prefab: {fileID: 0}
+      prefab: {fileID: 3508380386316081258, guid: 89fcd2011dc45aa44aafc942e8459aa3, type: 3}
       offset: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0}
       offsetMode: 0
       showTileWithPrefab: 0
-      showPrefabPreviewInTilePalette: 0
+      showPrefabPreviewInTilePalette: 1
     autilingGroup: 0
   - uv:
       serializedVersion: 2

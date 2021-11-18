@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8932994326869690946}
   - component: {fileID: 698007605357219475}
   m_Layer: 0
-  m_Name: "Salla de d\xE9part 3"
+  m_Name: Starter Room 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

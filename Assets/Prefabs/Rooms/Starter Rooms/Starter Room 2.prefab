@@ -179,7 +179,7 @@ GameObject:
   - component: {fileID: 395916800148025018}
   - component: {fileID: 6866403544398997889}
   m_Layer: 0
-  m_Name: "Salle de d\xE9part 2"
+  m_Name: Starter Room 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

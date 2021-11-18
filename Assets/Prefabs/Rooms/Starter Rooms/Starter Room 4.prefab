@@ -396,7 +396,7 @@ GameObject:
   - component: {fileID: 5683618756622581378}
   - component: {fileID: 6573060789576748484}
   m_Layer: 0
-  m_Name: "Salla de d\xE9part 4"
+  m_Name: Starter Room 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

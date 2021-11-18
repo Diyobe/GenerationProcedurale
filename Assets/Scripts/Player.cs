@@ -8,9 +8,15 @@ using UnityEngine;
 /// Player component. Manages inputs, character states and associated game flow.
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
-public class Player : MonoBehaviour {
+public class Player : MonoBehaviour
+{
 
     public static Player Instance = null;
+    bool isFalling = false;
+    Transform fallDestination;
+    Transform respawnDestination;
+
+    Animator animator;
 
     [System.Serializable]
     public class MovementParameters
@@ -36,6 +42,7 @@ public class Player : MonoBehaviour {
         ATTACKING = 1,
         STUNNED = 2,
         DEAD = 3,
+        FALLING = 4,
     }
 
 
@@ -84,16 +91,18 @@ public class Player : MonoBehaviour {
     private int _keyCount;
     public int KeyCount { get { return _keyCount; } set { _keyCount = value; } }
 
-	// Dungeon position
-	private Room _room = null;
-	public Room Room { get { return _room; } }
+    // Dungeon position
+    private Room _room = null;
+    public Room Room { get { return _room; } }
 
 
-	// Use this for initialization
-	private void Awake () {
+    // Use this for initialization
+    private void Awake()
+    {
         Instance = this;
         _body = GetComponent<Rigidbody2D>();
         GetComponentsInChildren<SpriteRenderer>(true, _spriteRenderers);
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -102,39 +111,42 @@ public class Player : MonoBehaviour {
     }
 
     // Update is called once per frame
-    private void Update () {
+    private void Update()
+    {
         UpdateState();
         UpdateInputs();
-	}
+    }
 
     // Update physics on FixedUpdate (FixedUpdate can be called multiple times a frame).
     private void FixedUpdate()
     {
         FixedUpdateMovement();
-		FixedUpdateRoom();
-	}
+        FixedUpdateRoom();
+        if (isFalling)
+            transform.position = Vector3.MoveTowards(transform.position, fallDestination.position, Time.deltaTime * 5);
+    }
 
-	private void FixedUpdateRoom()
-	{
-		Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position);
-		if(colliders != null && colliders.Length > 0)
-		{
-			foreach(Collider2D collider in colliders)
-			{
-				if(collider.gameObject.tag == "Door")
-				{
-					Room room = collider.gameObject.GetComponentInParent<Room>();
-					if(room && room != _room)
-					{
-						room.OnEnterRoom();
-					}
-				}
-			}
-		}
-	}
+    private void FixedUpdateRoom()
+    {
+        Collider2D[] colliders = Physics2D.OverlapPointAll(transform.position);
+        if (colliders != null && colliders.Length > 0)
+        {
+            foreach (Collider2D collider in colliders)
+            {
+                if (collider.gameObject.tag == "Door")
+                {
+                    Room room = collider.gameObject.GetComponentInParent<Room>();
+                    if (room && room != _room)
+                    {
+                        room.OnEnterRoom();
+                    }
+                }
+            }
+        }
+    }
 
-	// Update inputs
-	private void UpdateInputs()
+    // Update inputs
+    private void UpdateInputs()
     {
         if (CanMove())
         {
@@ -142,13 +154,18 @@ public class Player : MonoBehaviour {
             if (_direction.magnitude < controllerDeadZone)
             {
                 _direction = Vector2.zero;
-            } else {
+            }
+            else
+            {
                 _direction.Normalize();
             }
-            if(Input.GetButtonDown("Fire1")) {
+            if (Input.GetButtonDown("Fire1"))
+            {
                 Attack();
             }
-        } else {
+        }
+        else
+        {
             _direction = Vector2.zero;
         }
     }
@@ -156,13 +173,13 @@ public class Player : MonoBehaviour {
     // Update states
     private void UpdateState()
     {
-        switch(_state)
+        switch (_state)
         {
-			case STATE.ATTACKING:
-				SpawnAttackPrefab();
-				SetState(STATE.IDLE);
-				break;
-			default: break;
+            case STATE.ATTACKING:
+                SpawnAttackPrefab();
+                SetState(STATE.IDLE);
+                break;
+            default: break;
         }
     }
 
@@ -200,20 +217,24 @@ public class Player : MonoBehaviour {
             _body.velocity += _direction * _currentMovement.acceleration * Time.fixedDeltaTime;
             _body.velocity = Vector2.ClampMagnitude(_body.velocity, _currentMovement.speedMax);
             transform.eulerAngles = new Vector3(0.0f, 0.0f, ComputeOrientationAngle(_direction));
-        } else {
+        }
+        else
+        {
             // If direction magnitude == 0, Apply friction
             float frictionMagnitude = _currentMovement.friction * Time.fixedDeltaTime;
             if (_body.velocity.magnitude > frictionMagnitude)
             {
                 _body.velocity -= _body.velocity.normalized * frictionMagnitude;
-            } else {
+            }
+            else
+            {
                 _body.velocity = Vector2.zero;
             }
         }
     }
 
-	// Attack method sets player in attack state. Attack prefab is spawned by calling SpawnAttackPrefab method.
-	private void Attack()
+    // Attack method sets player in attack state. Attack prefab is spawned by calling SpawnAttackPrefab method.
+    private void Attack()
     {
         if (Time.time - lastAttackTime < attackCooldown)
             return;
@@ -243,7 +264,9 @@ public class Player : MonoBehaviour {
         if (life <= 0)
         {
             SetState(STATE.DEAD);
-        } else {
+        }
+        else
+        {
             if (attack != null && attack.knockbackDuration > 0.0f)
             {
                 StartCoroutine(ApplyKnockBackCoroutine(attack.knockbackDuration, attack.transform.right * attack.knockbackSpeed));
@@ -266,11 +289,11 @@ public class Player : MonoBehaviour {
     private IEnumerator BlinkCoroutine()
     {
         float invincibilityTimer = 0;
-        while(invincibilityTimer < invincibilityDuration)
+        while (invincibilityTimer < invincibilityDuration)
         {
             invincibilityTimer += Time.deltaTime;
             bool isVisible = ((int)(invincibilityTimer / invincibilityBlinkPeriod)) % 2 == 1;
-            foreach(SpriteRenderer spriteRenderer in _spriteRenderers)
+            foreach (SpriteRenderer spriteRenderer in _spriteRenderers)
             {
                 spriteRenderer.enabled = isVisible;
             }
@@ -297,7 +320,7 @@ public class Player : MonoBehaviour {
     private float ComputeOrientationAngle(Vector2 direction)
     {
         float angle = Vector2.SignedAngle(Vector2.right, direction);
-        switch(orientation)
+        switch (orientation)
         {
             case ORIENTATION.DPAD_8: return Utils.DiscreteAngle(angle, 45); // Only 0 45 90 135 180 225 270 315
             case ORIENTATION.DPAD_4: return Utils.DiscreteAngle(angle, 90); // Only 0 90 180 270
@@ -311,14 +334,42 @@ public class Player : MonoBehaviour {
         return _state == STATE.IDLE;
     }
 
-	public void EnterRoom(Room room)
-	{
-		_room = room;
-	}
+    public void EnterRoom(Room room)
+    {
+        _room = room;
+    }
+
+    public void FallInHole(Transform destination, Transform respawnPositon)
+    {
+        fallDestination = destination;
+        respawnDestination = respawnPositon;
+        isFalling = true;
+        animator.SetTrigger("Fall");
+        SetState(STATE.FALLING);
+    }
+
+    public void Respawn()
+    {
+        if (life > 0)
+            life--;
+        isFalling = false;
+        animator.SetTrigger("Idle");
+        transform.position = respawnDestination.position;
+        if (life > 0)
+            SetState(STATE.IDLE);
+        else
+        {
+            foreach (SpriteRenderer spriteRenderer in _spriteRenderers)
+            {
+                spriteRenderer.enabled = false;
+            }
+            SetState(STATE.DEAD);
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if( ((1 << collision.gameObject.layer) & hitLayers) != 0 )
+        if (((1 << collision.gameObject.layer) & hitLayers) != 0)
         {
             // Collided with hitbox
             Attack attack = collision.gameObject.GetComponent<Attack>();

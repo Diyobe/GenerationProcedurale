@@ -33,7 +33,7 @@ public class DungeonGenerator : MonoBehaviour
     private bool creationFailed = false;
 
 
-    private int nbTry = 0, nbTryMax = 100;
+    private int nbTry = 0, nbTryMax = 10;
 
 
     private void Start()
@@ -55,12 +55,15 @@ public class DungeonGenerator : MonoBehaviour
 
         GenerateDungeon(mainSize, null, true);
 
-        foreach (Node node in lockedNodes)
+        if(!creationFailed)
         {
-            int sizeSecondary = Random.Range(4, 6);
-            GenerateDungeon(sizeSecondary, node, false);
-            if (creationFailed)
-                break;
+            foreach (Node node in lockedNodes)
+            {
+                int sizeSecondary = Random.Range(4, 6);
+                GenerateDungeon(sizeSecondary, node, false);
+                if (creationFailed)
+                    break;
+            }
         }
 
         if(creationFailed)
@@ -76,6 +79,7 @@ public class DungeonGenerator : MonoBehaviour
         else
         {
             DrawDungeonGraph();
+            Debug.LogWarning("DONJON GENERE AVEC SUCCES :)");
         }
     }
 
@@ -112,18 +116,14 @@ public class DungeonGenerator : MonoBehaviour
 
             if (i > 0 && node.Position == Vector2.zero)
             {
-                if(!isMain)
-                {
+                creationFailed = true;
+
+                if (!isMain)
                     Debug.LogWarning("ECHEC CHEMIN SECONDAIRE, DESTRUCTION DU DONJON, ON RECOMMENCE !!!");
-                    creationFailed = true;
-                    break;
-                }
                 else
-                {
-                    i = start - 1;
-                    dungeon.Clear();
                     Debug.LogWarning("DESTRUCTION DU DONGEON PRINCIPAL, ON RECOMMENCE !!!!");
-                }
+
+                break;
             }
             else
             {
@@ -141,9 +141,6 @@ public class DungeonGenerator : MonoBehaviour
 
                     currentNode.connections.Add(new Connection(currentNode, node, isLock));
                     node.connections.Add(new Connection(node, currentNode, isLock));
-                }
-                else
-                {
                 }
             }
 

@@ -153,11 +153,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomTest: {fileID: 4485414929619078762, guid: 4b66255f9d0f2494d8d6659fc1820fc4, type: 3}
-  mainSizeMin: 10
-  mainSizeMax: 14
+  mainSizeMin: 14
+  mainSizeMax: 20
+  secondarySizeMin: 4
+  secondarySizeMax: 6
   roomDimensionX: 2
   roomDimensionY: 2
-  secondarySize: 0
+  minimumForLock: 5
 --- !u!4 &77615704
 Transform:
   m_ObjectHideFlags: 0

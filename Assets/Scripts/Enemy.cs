@@ -11,7 +11,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     public delegate void OnEnemyDead(Enemy enemy);
-    public static OnEnemyDead onEnemyDead;
+    public OnEnemyDead onEnemyDead;
 
     Animator animator;
     bool isFalling = false;
@@ -114,12 +114,6 @@ public class Enemy : MonoBehaviour
         }
 
         SetState(STATE.IDLE);
-        onEnemyDead += OnDeath;
-    }
-
-    void OnDeath(Enemy enemy)
-    {
-
     }
 
     // Update is called once per frame
@@ -193,7 +187,7 @@ public class Enemy : MonoBehaviour
         switch (_state)
         {
             case STATE.STUNNED: _currentMovement = stunnedMovement; break;
-            case STATE.DEAD: EndBlink(); onEnemyDead(this); Destroy(gameObject); break;
+            case STATE.DEAD: EndBlink(); onEnemyDead?.Invoke(this); Destroy(gameObject); break;
             default: _currentMovement = defaultMovement; break;
         }
 

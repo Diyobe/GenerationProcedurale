@@ -7,9 +7,10 @@ public class Room : MonoBehaviour
 {
 
     [SerializeField] List<Enemy> enemies;
-    [SerializeField] Door[] doors;
+    [SerializeField] List<Door> doors;
     public bool isStartRoom = false;
     public bool isChallengeRoom = false;
+    public bool challengeFinished = false;
     public Vector2Int position = Vector2Int.zero;
 
     private TilemapGroup _tilemapGroup;
@@ -20,6 +21,15 @@ public class Room : MonoBehaviour
     {
         _tilemapGroup = GetComponentInChildren<TilemapGroup>();
         allRooms.Add(this);
+        //PropsChild = get
+        if (this.isChallengeRoom)
+        {
+            foreach (Transform child in transform)
+            {
+                doors.AddRange(child.GetComponentsInChildren<Door>());
+                enemies.AddRange(child.GetComponentsInChildren<Enemy>());
+            }
+        }
     }
 
     private void OnDestroy()
@@ -33,6 +43,15 @@ public class Room : MonoBehaviour
         {
             OnEnterRoom();
         }
+
+        if (this.isChallengeRoom)
+        {
+            foreach (Enemy enemy in enemies)
+            {
+                enemy.onEnemyDead += RemoveEnemyFromList;
+            }
+            //CloseDoors();
+        }
     }
 
     public void OnEnterRoom()
@@ -41,11 +60,7 @@ public class Room : MonoBehaviour
         Bounds cameraBounds = GetWorldRoomBounds();
         cameraFollow.SetBounds(cameraBounds);
         Player.Instance.EnterRoom(this);
-        if (this.isChallengeRoom)
-        {
-            Enemy.onEnemyDead += RemoveEnemyFromList;
-            //CloseDoors();
-        }
+
     }
 
 
@@ -81,10 +96,14 @@ public class Room : MonoBehaviour
         Debug.Log("Enemy Removed");
         if (enemy != null)
         {
-            if (enemies.Count <= 0)
+            if (enemies.Count <= 1)
                 OpenDoors();
             else
+            {
+                enemy.onEnemyDead -= RemoveEnemyFromList;
                 enemies.Remove(enemy);
+
+            }
         }
     }
 
@@ -92,9 +111,11 @@ public class Room : MonoBehaviour
     {
         foreach (Door door in doors)
         {
+            challengeFinished = true;
             door.OpenDoor();
+            Debug.Log("ChallengeDone");
         }
-        Enemy.onEnemyDead -= RemoveEnemyFromList;
+
     }
 
     private void CloseDoors()
@@ -102,6 +123,15 @@ public class Room : MonoBehaviour
         foreach (Door door in doors)
         {
             door.CloseDoor();
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Player" && !challengeFinished)
+        {
+            Debug.Log("Enter in challenge Room");
+            CloseDoors();
         }
     }
 }

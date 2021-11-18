@@ -14,10 +14,10 @@ public enum Difficulty
     Hard,
 }
 
-public class Node : MonoBehaviour
+public class Node
 {
-    Position position;
-    public Position Position
+    Vector2 position;
+    public Vector2 Position
     {
         get { return position; }
         set { position = value; }

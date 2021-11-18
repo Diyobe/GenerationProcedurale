@@ -152,8 +152,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7551a88d059a641bc722652947d20a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomTest: {fileID: 4485414929619078762, guid: 4b66255f9d0f2494d8d6659fc1820fc4, type: 3}
   mainSizeMin: 10
   mainSizeMax: 14
+  roomDimensionX: 2
+  roomDimensionY: 2
   secondarySize: 0
 --- !u!4 &77615704
 Transform:
@@ -222,7 +225,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 9.71
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

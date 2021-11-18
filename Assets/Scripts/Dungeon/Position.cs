@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Position : MonoBehaviour
 {
-    public int x;
-    public int y;
+    public float x;
+    public float y;
 
     public Position(int x, int y)
     {

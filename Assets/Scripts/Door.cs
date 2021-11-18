@@ -86,7 +86,47 @@ public class Door : MonoBehaviour {
         }
     }
 
-	private Room GetNextRoom()
+    public void OpenDoor()
+    {
+        if(State == STATE.CLOSED)
+        {
+            SetState(STATE.OPEN);
+            Room nextRoom = GetNextRoom();
+            if (nextRoom)
+            {
+                Door[] doors = nextRoom.GetComponentsInChildren<Door>(true);
+                foreach (Door door in doors)
+                {
+                    if (_orientation == Utils.OppositeOrientation(door.Orientation) && door._state == STATE.CLOSED)
+                    {
+                        door.SetState(STATE.OPEN);
+                    }
+                }
+            }
+        }
+    }
+
+    public void CloseDoor()
+    {
+        if (State == STATE.OPEN)
+        {
+            SetState(STATE.CLOSED);
+            Room nextRoom = GetNextRoom();
+            if (nextRoom)
+            {
+                Door[] doors = nextRoom.GetComponentsInChildren<Door>(true);
+                foreach (Door door in doors)
+                {
+                    if (_orientation == Utils.OppositeOrientation(door.Orientation) && door._state == STATE.OPEN)
+                    {
+                        door.SetState(STATE.CLOSED);
+                    }
+                }
+            }
+        }
+    }
+
+    private Room GetNextRoom()
 	{
 		Vector2Int dir = Utils.OrientationToDir(_orientation);
 		Room nextRoom = Room.allRooms.Find(x => x.position == _room.position + dir);

@@ -10,6 +10,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Enemy : MonoBehaviour
 {
+    public delegate void OnEnemyDead(Enemy enemy);
+    public static OnEnemyDead onEnemyDead;
+
+    Animator animator;
+    bool isFalling = false;
+    Transform fallDestination;
 
     [System.Serializable]
     public class MovementParameters
@@ -35,6 +41,7 @@ public class Enemy : MonoBehaviour
         ATTACKING = 1,
         STUNNED = 2,
         DEAD = 3,
+        FALLING = 4,
     }
 
 
@@ -87,6 +94,7 @@ public class Enemy : MonoBehaviour
         _body = GetComponent<Rigidbody2D>();
         GetComponentsInChildren<SpriteRenderer>(true, _spriteRenderers);
         allEnemies.Add(this);
+        animator = GetComponent<Animator>();
 
     }
 
@@ -106,6 +114,12 @@ public class Enemy : MonoBehaviour
         }
 
         SetState(STATE.IDLE);
+        onEnemyDead += OnDeath;
+    }
+
+    void OnDeath(Enemy enemy)
+    {
+
     }
 
     // Update is called once per frame
@@ -113,6 +127,8 @@ public class Enemy : MonoBehaviour
     {
         UpdateState();
         UpdateIA();
+        if (isFalling)
+            transform.position = Vector3.MoveTowards(transform.position, fallDestination.position, Time.deltaTime * 5);
     }
 
     // Update physics on FixedUpdate (FixedUpdate can be called multiple times a frame).
@@ -177,7 +193,7 @@ public class Enemy : MonoBehaviour
         switch (_state)
         {
             case STATE.STUNNED: _currentMovement = stunnedMovement; break;
-            case STATE.DEAD: EndBlink(); Destroy(gameObject); break;
+            case STATE.DEAD: EndBlink(); onEnemyDead(this); Destroy(gameObject); break;
             default: _currentMovement = defaultMovement; break;
         }
 
@@ -313,6 +329,19 @@ public class Enemy : MonoBehaviour
     private bool CanMove()
     {
         return _state == STATE.IDLE;
+    }
+
+    public void FallInHole(Transform destination)
+    {
+        fallDestination = destination;
+        isFalling = true;
+        animator.SetTrigger("Fall");
+        SetState(STATE.FALLING);
+    }
+
+    public void DeathInHole()
+    {
+        SetState(STATE.DEAD);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

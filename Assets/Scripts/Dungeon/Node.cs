@@ -6,7 +6,9 @@ public enum RoomType
 {
     Start,
     End,
-    Other,
+    Key,
+    Special,
+    Normal,
 }
 public enum Difficulty
 {

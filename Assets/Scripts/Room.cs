@@ -5,7 +5,13 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
-
+    [SerializeField] RoomType roomType;
+    public RoomType Type
+    {
+        get { return roomType; }
+    }
+    public List<Direction> doorsDirection = new List<Direction>();
+    public Direction lockDirection;
     [SerializeField] List<Enemy> enemies;
     [SerializeField] List<Door> doors;
     public bool isStartRoom = false;

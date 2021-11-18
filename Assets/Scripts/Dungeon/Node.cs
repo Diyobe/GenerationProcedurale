@@ -7,8 +7,17 @@ public enum RoomType
     Start,
     End,
     Key,
+    Lock,
     Special,
     Normal,
+}
+public enum Direction
+{
+    Up,
+    Down,
+    Left,
+    Right,
+    None,
 }
 public enum Difficulty
 {
@@ -31,6 +40,9 @@ public class Node
         get { return type; }
         set { type = value; }
     }
+    
+    public List<Direction> doorsDirection = new List<Direction>();
+    public Direction lockDirection;
 
     Difficulty difficulty;
     public Difficulty Difficulty

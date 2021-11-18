@@ -103,6 +103,7 @@ public class Player : MonoBehaviour
         _body = GetComponent<Rigidbody2D>();
         GetComponentsInChildren<SpriteRenderer>(true, _spriteRenderers);
         animator = GetComponent<Animator>();
+        Camera.main.GetComponent<CameraFollow>().target = gameObject;
     }
 
     private void Start()

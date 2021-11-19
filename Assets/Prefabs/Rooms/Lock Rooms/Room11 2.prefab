@@ -717,7 +717,7 @@ GameObject:
   - component: {fileID: 725442587387487864}
   - component: {fileID: 3561495046395498222}
   m_Layer: 0
-  m_Name: Room11
+  m_Name: Room11 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -776,7 +776,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomType: 3
   doorsDirection: 000000000100000003000000
-  lockDirection: 1
+  lockDirection: 0
   enemies: []
   doors: []
   isStartRoom: 0
@@ -855,9 +855,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4596811972292035933, guid: e220ae9ccd75bd04fa295d970d7c2202, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6144991255345215292, guid: e220ae9ccd75bd04fa295d970d7c2202, type: 3}
       propertyPath: m_Name
       value: Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 7770916311107008316, guid: e220ae9ccd75bd04fa295d970d7c2202, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e220ae9ccd75bd04fa295d970d7c2202, type: 3}
@@ -1146,6 +1154,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 163101407681596805}
     m_Modifications:
+    - target: {fileID: 1018084634576590954, guid: 94bbea04c40d9c144bedd2c8c4df140e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3508380386316081258, guid: 94bbea04c40d9c144bedd2c8c4df140e, type: 3}
       propertyPath: m_Name
       value: DoorClosed
@@ -1193,6 +1205,10 @@ PrefabInstance:
     - target: {fileID: 4828519000341554167, guid: 94bbea04c40d9c144bedd2c8c4df140e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6502082411643283979, guid: 94bbea04c40d9c144bedd2c8c4df140e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94bbea04c40d9c144bedd2c8c4df140e, type: 3}

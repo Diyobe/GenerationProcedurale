@@ -79,7 +79,7 @@ public class DungeonGenerator : MonoBehaviour
         }
         else
         {
-            DrawDungeonGraph();
+            //DrawDungeonGraph();
             DrawDungeonRooms();
             Debug.LogWarning("DONJON GENERE AVEC SUCCES :)");
         }
@@ -108,7 +108,7 @@ public class DungeonGenerator : MonoBehaviour
                 else
                     node.Type = RoomType.Key;
 
-                node.Position = ChooseRandomDirection(currentNode, node);
+                node.Position = ChooseRandomDirection(currentNode, node, isMain);
 
             }
             else
@@ -122,7 +122,7 @@ public class DungeonGenerator : MonoBehaviour
                     isLock = true;
                 }
 
-                node.Position = ChooseRandomDirection(currentNode, node);
+                node.Position = ChooseRandomDirection(currentNode, node, isMain);
 
                 
             }
@@ -164,7 +164,7 @@ public class DungeonGenerator : MonoBehaviour
         return true;
     }
 
-    private Vector2 ChooseRandomDirection(Node currentNode, Node node)
+    private Vector2 ChooseRandomDirection(Node currentNode, Node node, bool isMain)
     {
         List<int> list = new List<int> { 0, 1, 2, 3 };
         int i = 0;
@@ -201,9 +201,9 @@ public class DungeonGenerator : MonoBehaviour
                 currentNode.doorsDirection.Add(dir);
                 node.doorsDirection.Add(RevertDirection(dir));
 
-                if(node.Type == RoomType.Lock)
+                if(isMain && currentNode.Type == RoomType.Lock)
                 {
-                    node.lockDirection = RevertDirection(dir);
+                    currentNode.lockDirection = dir;
                 }
 
                 return position;
@@ -316,22 +316,17 @@ public class DungeonGenerator : MonoBehaviour
             {
                 bool valid = true;
 
-                Debug.Log("NODE TYPE = " + node.Type + " | ROOM TYPE = " + room.Type);
-                Debug.Log("NODE CONNECT = " + node.doorsDirection.Count + " | ROOM CONNECT = " + room.doorsDirection.Count);
-
                 if (room.Type == node.Type && room.doorsDirection.Count == node.connections.Count)
                 {
                     for (int i = 0; i < room.doorsDirection.Count; i++)
                     {
+                        if (room.Type == RoomType.Lock && room.lockDirection != node.lockDirection)
+                        {
+                            valid = false;
+                            break;
+                        }
                         if (!node.doorsDirection.Contains(room.doorsDirection[i]))
                         {
-                            for(int j = 0; j < node.doorsDirection.Count; j++)
-                            {
-                                Debug.Log(j + " = " + node.doorsDirection[j]);
-                            }
-                            Debug.Log("NE CONTIENT PAS : " + room.doorsDirection[i]);
-
-
                             valid = false;
                             break;
                         }
@@ -344,11 +339,10 @@ public class DungeonGenerator : MonoBehaviour
 
                 if (valid)
                 {
-                    Debug.Log("ADD ROOM");
+                    if (room.Type == RoomType.Lock)
+                        Debug.Log("JE PASSE AVEC UN LOCK");
                     validRooms.Add(room);
                 }
-                else
-                    Debug.Log("C'EST MORT");
             }
 
             if(validRooms.Count > 0)

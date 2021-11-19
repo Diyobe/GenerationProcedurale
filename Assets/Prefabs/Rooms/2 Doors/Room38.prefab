@@ -156,6 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomType: 5
   doorsDirection: 0000000001000000
+  lockDirection: 4
   enemies: []
   doors: []
   isStartRoom: 0

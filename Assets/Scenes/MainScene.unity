@@ -187,6 +187,11 @@ MonoBehaviour:
   - {fileID: 6369995751569809104, guid: 1ec0a1f91ac99334c9b6f7e6fdb1d6b1, type: 3}
   - {fileID: 7738549765236299825, guid: 744a34cd361c9044da66fb462434a545, type: 3}
   - {fileID: 3973710795208811766, guid: 0f89d64dcaf28104b844014e9b96efd4, type: 3}
+  - {fileID: 523298591131069855, guid: 1fec899ee3177ad47bb1bf522108cb1e, type: 3}
+  - {fileID: 3521102027149151558, guid: a8d13b257a1365f4bb663a5573501e8e, type: 3}
+  - {fileID: 725442587387487864, guid: 3cf796c166ef6b747b57c9e52170add9, type: 3}
+  - {fileID: 6369995751569809104, guid: 1910905ff52a457449196df34855c396, type: 3}
+  - {fileID: 725442587387487864, guid: ae2c326e8f47d2042b92d1137dec1639, type: 3}
   mainSizeMin: 14
   mainSizeMax: 20
   secondarySizeMin: 4
@@ -215,6 +220,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4463925706443103305, guid: bd94f98397abdaf45a59382f99f4053d, type: 3}
+      propertyPath: target
+      value: 
+      objectReference: {fileID: 1514566371}
     - target: {fileID: 4463925706443103307, guid: bd94f98397abdaf45a59382f99f4053d, type: 3}
       propertyPath: m_Name
       value: Main Camera
@@ -265,3 +274,65 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd94f98397abdaf45a59382f99f4053d, type: 3}
+--- !u!1 &1514566371 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3061304262239656675, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+  m_PrefabInstance: {fileID: 1642038792}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1642038792
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3061304262239656675, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3061304262239656687, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3e99f044c283cd440bd8fee09c5090db, type: 3}

@@ -6,6 +6,8 @@ using UnityEngine;
 public class Room : MonoBehaviour
 {
     [SerializeField] RoomType roomType;
+    [SerializeField] GameObject winCanvas;
+
     public RoomType Type
     {
         get { return roomType; }
@@ -115,13 +117,16 @@ public class Room : MonoBehaviour
 
     private void OpenDoors()
     {
-        foreach (Door door in doors)
+        if (roomType == RoomType.End)
         {
-            challengeFinished = true;
-            door.OpenDoor();
-            Debug.Log("ChallengeDone");
+            winCanvas.SetActive(true);
         }
-
+            foreach (Door door in doors)
+            {
+                challengeFinished = true;
+                door.OpenDoor();
+                Debug.Log("ChallengeDone");
+            }
     }
 
     private void CloseDoors()

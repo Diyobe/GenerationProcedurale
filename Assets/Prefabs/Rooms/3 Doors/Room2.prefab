@@ -670,7 +670,7 @@ MonoBehaviour:
   m_tilemaps:
   - {fileID: 1128395893301237752}
   - {fileID: 4305224470202565891}
-  m_selectedIndex: 0
+  m_selectedIndex: 1
   m_unselectedColorMultiplier: 1
   m_defaultTilemapWindowVisible: 0
   m_displayTilemapRList: 1
@@ -690,10 +690,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abd64e0034f05b44581a553bb498242e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomType: 0
+  doorsDirection: 
+  lockDirection: 0
   enemies: []
   doors: []
   isStartRoom: 0
   isChallengeRoom: 0
+  challengeFinished: 0
   position: {x: 0, y: 1}
 --- !u!50 &5974092737426082142
 Rigidbody2D:

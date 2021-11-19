@@ -192,6 +192,9 @@ MonoBehaviour:
   - {fileID: 725442587387487864, guid: 3cf796c166ef6b747b57c9e52170add9, type: 3}
   - {fileID: 6369995751569809104, guid: 1910905ff52a457449196df34855c396, type: 3}
   - {fileID: 725442587387487864, guid: ae2c326e8f47d2042b92d1137dec1639, type: 3}
+  - {fileID: 6847807145761947648, guid: 77873292a9360854e83933086a6afbfa, type: 3}
+  - {fileID: 6847807145761947648, guid: be4157e77284ae049b5852c539ca580b, type: 3}
+  - {fileID: 6847807145761947648, guid: 74bebac469202f844aef15fc64c80646, type: 3}
   mainSizeMin: 14
   mainSizeMax: 20
   secondarySizeMin: 4

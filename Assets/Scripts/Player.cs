@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     Transform fallDestination;
     Transform respawnDestination;
 
+    [SerializeField] GameObject deathCanvas;
+
     Animator animator;
 
     [System.Serializable]
@@ -196,7 +198,7 @@ public class Player : MonoBehaviour
         switch (_state)
         {
             case STATE.STUNNED: _currentMovement = stunnedMovement; break;
-            case STATE.DEAD: EndBlink(); break;
+            case STATE.DEAD: EndBlink(); deathCanvas.SetActive(true); break;
             default: _currentMovement = defaultMovement; break;
         }
 

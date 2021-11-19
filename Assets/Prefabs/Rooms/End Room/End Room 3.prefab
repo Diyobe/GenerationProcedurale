@@ -70,6 +70,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abd64e0034f05b44581a553bb498242e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomType: 1
+  doorsDirection: 02000000
+  lockDirection: 4
   enemies: []
   doors: []
   isStartRoom: 0

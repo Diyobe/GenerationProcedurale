@@ -70,7 +70,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abd64e0034f05b44581a553bb498242e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  roomType: 0
+  doorsDirection: 02000000
+  lockDirection: 4
+  enemies: []
+  doors: []
   isStartRoom: 0
+  isChallengeRoom: 0
+  challengeFinished: 0
   position: {x: 0, y: 1}
 --- !u!50 &698007605357219475
 Rigidbody2D:

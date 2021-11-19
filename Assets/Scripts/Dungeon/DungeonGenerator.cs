@@ -6,13 +6,14 @@ public class DungeonGenerator : MonoBehaviour
 {
     public GameObject roomTest;
 
-    public enum Direction { Left = 1, Right = 2, Up = 3, Down = 4}
-
     List<Node> dungeon = new List<Node>();
 
     List<Node> lockedNodes = new List<Node>();
 
     Vector2 startPosition = new Vector2(0, 0);
+
+    [SerializeField]
+    private List<Room> roomList = new List<Room>();
 
     [SerializeField]
     private int mainSizeMin = 10, mainSizeMax = 14;
@@ -78,7 +79,8 @@ public class DungeonGenerator : MonoBehaviour
         }
         else
         {
-            DrawDungeonGraph();
+            //DrawDungeonGraph();
+            DrawDungeonRooms();
             Debug.LogWarning("DONJON GENERE AVEC SUCCES :)");
         }
     }
@@ -92,6 +94,7 @@ public class DungeonGenerator : MonoBehaviour
         for (int i = start; i < size; i++)
         {
             Node node = new Node();
+            bool isLock = false;
 
             if (i == 0)
             {
@@ -101,17 +104,27 @@ public class DungeonGenerator : MonoBehaviour
             else if (i == size - 1)
             {
                 if(isMain)
-                    node.Type = RoomType.End;
+                    node.Type = RoomType.End; 
                 else
                     node.Type = RoomType.Key;
 
-                node.Position = ChooseRandomDirection(currentNode.Position);
+                node.Position = ChooseRandomDirection(currentNode, node, isMain);
+
             }
             else
             {
                 node.Type = RoomType.Normal;
-                node.Position = ChooseRandomDirection(currentNode.Position);
 
+                if (isMain && lockedIndex.Contains(i))
+                {
+                    currentNode.Type = RoomType.Lock;
+                    lockedNodes.Add(currentNode);
+                    isLock = true;
+                }
+
+                node.Position = ChooseRandomDirection(currentNode, node, isMain);
+
+                
             }
 
             if (i > 0 && node.Position == Vector2.zero)
@@ -131,14 +144,6 @@ public class DungeonGenerator : MonoBehaviour
 
                 if (node.Type != RoomType.Start)
                 {
-                    bool isLock = false;
-
-                    if(isMain && lockedIndex.Contains(i))
-                    {
-                        isLock = true;
-                        lockedNodes.Add(currentNode);
-                    }
-
                     currentNode.connections.Add(new Connection(currentNode, node, isLock));
                     node.connections.Add(new Connection(node, currentNode, isLock));
                 }
@@ -159,9 +164,9 @@ public class DungeonGenerator : MonoBehaviour
         return true;
     }
 
-    private Vector2 ChooseRandomDirection(Vector2 currentPosition)
+    private Vector2 ChooseRandomDirection(Node currentNode, Node node, bool isMain)
     {
-        List<int> list = new List<int> { 1, 2, 3, 4 };
+        List<int> list = new List<int> { 0, 1, 2, 3 };
         int i = 0;
 
         while(i < 4)
@@ -170,7 +175,7 @@ public class DungeonGenerator : MonoBehaviour
 
             Direction dir = (Direction)list[randomInt];
 
-            Vector2 position = currentPosition; ;
+            Vector2 position = currentNode.Position;
 
             if (dir == Direction.Left)
             {
@@ -192,7 +197,15 @@ public class DungeonGenerator : MonoBehaviour
 
             if (CheckPosition(position))
             {
-                currentPosition = position;
+                //currentNode.Position = position;
+                currentNode.doorsDirection.Add(dir);
+                node.doorsDirection.Add(RevertDirection(dir));
+
+                if(isMain && currentNode.Type == RoomType.Lock)
+                {
+                    currentNode.lockDirection = dir;
+                }
+
                 return position;
             }
             else
@@ -218,6 +231,27 @@ public class DungeonGenerator : MonoBehaviour
                 i--;
             else
                 lockedIndex.Add(index);
+        }
+    }
+
+    private Direction RevertDirection(Direction dir)
+    {
+
+        if (dir == Direction.Left)
+        {
+            return Direction.Right;
+        }
+        else if (dir == Direction.Right)
+        {
+            return Direction.Left;
+        }
+        else if (dir == Direction.Up)
+        {
+            return Direction.Down;
+        }
+        else
+        {
+            return Direction.Up;
         }
     }
 
@@ -269,6 +303,53 @@ public class DungeonGenerator : MonoBehaviour
                 line.SetPosition(0, connect.Nodes[0].Position);
                 line.SetPosition(1, connect.Nodes[1].Position);
 
+            }
+        }
+    }
+
+    public void DrawDungeonRooms()
+    {
+        foreach (Node node in dungeon)
+        {
+            List<Room> validRooms = new List<Room>();
+            foreach (Room room in roomList)
+            {
+                bool valid = true;
+
+                if (room.Type == node.Type && room.doorsDirection.Count == node.connections.Count)
+                {
+                    for (int i = 0; i < room.doorsDirection.Count; i++)
+                    {
+                        if (room.Type == RoomType.Lock && room.lockDirection != node.lockDirection)
+                        {
+                            valid = false;
+                            break;
+                        }
+                        if (!node.doorsDirection.Contains(room.doorsDirection[i]))
+                        {
+                            valid = false;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                }
+
+                if (valid)
+                {
+                    if (room.Type == RoomType.Lock)
+                        Debug.Log("JE PASSE AVEC UN LOCK");
+                    validRooms.Add(room);
+                }
+            }
+
+            if(validRooms.Count > 0)
+            {
+                int index = Random.Range(0, validRooms.Count);
+                GameObject go = Instantiate(validRooms[index].gameObject);
+                go.transform.position = new Vector2(node.Position.x, node.Position.y);
             }
         }
     }
